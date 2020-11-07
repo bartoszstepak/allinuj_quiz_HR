@@ -96,6 +96,9 @@ export default class Quiz extends React.Component {
             questionIdex = this.getRandomIndexNumer();
             currentIteration++;
         }
+        console.log(questionIdex);
+        console.log(this.state.questions[questionIdex]);
+
         this.setState({
             currentQuestionIndex: questionIdex,
             currentQuestion: this.state.questions[questionIdex]
