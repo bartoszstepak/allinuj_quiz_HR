@@ -26,4 +26,32 @@ button{
     margin: 0px 10px 0px 10px !important;
 }
 
+h1 {
+    padding: 15px !important;
+}
 
+h4{
+    padding: 15px !important;
+}
+
+
+.btn-info:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: #17a2b8 !important;
+    border-color:#17a2b8 !important;
+}
+
+.btn-info:hover {
+    background-color: #138496 !important;
+    border-color: #117a8b !important;
+}
+
+.btn-info:active {
+    background-color: #17a2b8 !important;
+}
+
+.btn-dark:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}

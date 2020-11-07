@@ -83,8 +83,8 @@ export default class Quiz extends React.Component {
         });
     }
 
-    onClickNextBtn() {
-        this.getNextQuestion();
+    onClickNextBtn(e) {
+        this.getNextQuestion(); 
     }
 
 
@@ -111,18 +111,18 @@ export default class Quiz extends React.Component {
 
                         {this.state.isQuizStarted ?
                             <div class="card-body">
-                                <h1 class="card-title">Twoje Pytanie</h1>
-                                <p class="card-text">{this.state.currentQuestion}</p>
+                                <h2 class="card-title">Twoje Pytanie</h2>
+                                <h1 class="card-text">{this.state.currentQuestion}</h1>
                                 <div className="d-flex justify-content-center">
                                     <button type="button" class="btn btn-dark" onClick={() => this.onClickEndQuizBtn()}>Zakończ Quiz</button>
-                                    <button type="button" class="btn btn-info" onClick={() => this.onClickNextBtn()}>Następne Pytanie</button>
+                                    <button type="button" class="btn btn-info" onClick={(e) => this.onClickNextBtn(e)}>Następne Pytanie</button>
                                 </div>
                             </div>
 
                             :
                             <div class="card-body">
-                                <h1 class="card-title">Witaj elo powitanie</h1>
-                                <p class="card-text">bla bla tekst</p>
+                                <h2 class="card-title">Witaj elo powitanie</h2>
+                                <h1 class="card-text">bla bla tekst</h1>
                                 <div className="d-flex justify-content-center">
                                     <button type="button" class="btn btn-info" onClick={() => this.onClickStartQuizBtn()}>Rozpocznij Quiz</button>
                                 </div>
