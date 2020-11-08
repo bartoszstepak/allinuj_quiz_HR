@@ -7,9 +7,11 @@ export default class Quiz extends React.Component {
         super(props)
 
         this.state = {
+            previousQuestionsUsageInfo: [],
             isQuizStarted: false,
             currentQuestionIndex: 0,
             currentQuestion: "",
+            counter: 0,
             questions: [
                 "Ile razy musi zadzwonić telefon, zanim podniesiesz słuchawkę?",
                 "Jaki masz dźwięk budzika w telefonie?",
@@ -29,7 +31,6 @@ export default class Quiz extends React.Component {
                 "Kim chciałeś/aś zostać w dzieciństwie?",
                 "Jaka jest Twoja pierwsza myśl po przebudzeniu?",
                 "Jaką magiczną moc chciałabyś/chciałbyś posiadać?",
-                "Powiedz, co myślisz o sobie, jak się oceniasz, jakie jest Twoje zdanie o Tobie samym i jak to się ma do tego, jak widzą Cię inni.",
                 "Ważny dla ciebie cytat/powiedzenie brzmi…",
                 "Twoja opinia na temat Izabeli Łęckiej",
                 "Gdybyś był/a niewidzialny/na przez jeden dzień co byś zrobił/a?",
@@ -56,15 +57,35 @@ export default class Quiz extends React.Component {
                 "Czy kiedykolwiek ukradłeś/aś znak drogowy? Albo czy masz jakiś przypał imprezowy?" ,
                 "Za co przebierałeś/aś się na bale w przedszkolu?",
                 "Ulubiona piosenka z HSM?",
-                "Ryan Gosling czy Robert Pattinson?" 
+                "Ryan Gosling czy Robert Pattinson?",
+                "Powiedz, co myślisz o sobie, jak się oceniasz, jakie jest Twoje zdanie o Tobie samym i jak to się ma do tego, jak widzą Cię inni.",
+
             ]
         }
     }
 
+    componentDidMount() {
+        var previousQuestionsUsageInfo = [];
+        for (var i = 0; i < this.state.questions.length; i++) {
+            previousQuestionsUsageInfo.push(false);
+        }
+        this.setState({
+            previousQuestionsUsageInfo: previousQuestionsUsageInfo
+        })    
+    }
+
+   
     getRandomIndexNumer() {
-        var min = 0;
         var max = this.state.questions.length;
         var rand = Math.floor(Math.random() * max);
+        const maxIntrationCount = 100;
+        var currentIteration = 0;
+        
+        while(rand === this.state.currentQuestionIndex || currentIteration > maxIntrationCount) {
+            rand = Math.floor(Math.random() * max);
+            currentIteration++;
+        }
+        
         return rand >=0 && rand <= max ? rand :  this.getRandomIndexNumer();
     }
 
@@ -87,24 +108,56 @@ export default class Quiz extends React.Component {
         this.getNextQuestion(); 
     }
 
-
     getNextQuestion() {
-        const maxIntrationCount = 100;
-        var currentIteration = 0;
-        var questionIdex = this.getRandomIndexNumer();
-        while(questionIdex == this.state.currentQuestionIndex || currentIteration > maxIntrationCount) {
-            questionIdex = this.getRandomIndexNumer();
-            currentIteration++;
+        if(this.isQuizFinished()) {
+            this.finishQuiz();
         }
-        console.log(questionIdex);
-        console.log(this.state.questions[questionIdex]);
+
+        var questionIdex = this.getRandomIndexNumer();
+        
+        while(this.isQuestionUsed(questionIdex)) {
+            questionIdex = this.getRandomIndexNumer();
+        }
+        
+        var previousQuestionsUsageInfo = this.state.previousQuestionsUsageInfo;
+        previousQuestionsUsageInfo[questionIdex] = true;
 
         this.setState({
             currentQuestionIndex: questionIdex,
-            currentQuestion: this.state.questions[questionIdex]
+            currentQuestion: this.state.questions[questionIdex],
+            previousQuestionsUsageInfo: previousQuestionsUsageInfo,
+            counter: this.state.counter+1
         });
     }
 
+    isQuizFinished() {
+        return this.state.counter === this.state.questions.length;
+    }
+
+    finishQuiz() {
+        window.confirm("Koniec pytań - Kliknij OK aby zakończyć i rozpocząć od nowa");
+        this.resetQuestionUsageInfo()
+        this.setState({
+            counter: 0,
+            isQuizStarted: false,
+            currentQuestion: "",
+            currentQuestionIndex: 0
+        })
+    }
+
+    resetQuestionUsageInfo() {
+        var previousQuestionsUsageInfo = this.state.previousQuestionsUsageInfo;
+        for (var i = 0; i < this.state.questions.length; i++) {
+            previousQuestionsUsageInfo[i] = false;
+        }
+        this.setState({
+            previousQuestionsUsageInfo: previousQuestionsUsageInfo
+        })
+    }
+
+    isQuestionUsed(index){
+        return this.state.previousQuestionsUsageInfo[index];
+    }
 
     render() {
         return (
@@ -124,13 +177,11 @@ export default class Quiz extends React.Component {
 
                             :
                             <div class="card-body">
-                                <h2 class="card-title">Witaj elo powitanie</h2>
-                                <h1 class="card-text">bla bla tekst</h1>
+                                <h1 class="card-text">Witamy w maszynie losującej ALL IN UJ</h1>
                                 <div className="d-flex justify-content-center">
                                     <button type="button" class="btn btn-info" onClick={() => this.onClickStartQuizBtn()}>Rozpocznij Quiz</button>
                                 </div>
                             </div>
-
                         }
                     </div>
                 </div>
